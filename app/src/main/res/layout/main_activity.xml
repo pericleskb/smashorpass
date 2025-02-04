@@ -11,7 +11,7 @@
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@id/navigation"
         app:layout_constraintTop_toTopOf="parent"
-        tools:layout="@layout/choice_fragment" />
+        tools:layout="@layout/pokemon_choice_card" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/navigation"

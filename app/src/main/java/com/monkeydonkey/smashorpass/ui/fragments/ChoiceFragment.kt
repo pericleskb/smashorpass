@@ -9,8 +9,10 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.monkeydonkey.smashorpass.databinding.ChoiceFragmentBinding
 import com.monkeydonkey.smashorpass.ui.MainViewModel
+import com.monkeydonkey.smashorpass.ui.adapters.ChoiceAdapter
 import kotlinx.coroutines.launch
 
 class ChoiceFragment: Fragment() {
@@ -21,6 +23,7 @@ class ChoiceFragment: Fragment() {
 
     private var _binding: ChoiceFragmentBinding? = null
     private val binding get() = _binding!!
+    private val choiceAdapter = ChoiceAdapter()
 
     private val viewModel: MainViewModel by activityViewModels()
 
@@ -30,6 +33,11 @@ class ChoiceFragment: Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = ChoiceFragmentBinding.inflate(inflater, container, false)
+
+
+        binding.pokemonProfileRecyclerView.layoutManager =
+            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        binding.pokemonProfileRecyclerView.adapter = choiceAdapter
         return binding.root
     }
 
@@ -38,14 +46,8 @@ class ChoiceFragment: Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.mainState.collect {
-                    var printString = ""
-                    it.pokeList.forEach {
-                            pokemon ->
-                        run {
-                            printString += "${pokemon.name}\n"
-                        }
-                    }
-                    binding.textView.text = printString
+                    choiceAdapter.addToList(it.pokeList)
+                    choiceAdapter.notifyDataSetChanged()
                 }
             }
         }

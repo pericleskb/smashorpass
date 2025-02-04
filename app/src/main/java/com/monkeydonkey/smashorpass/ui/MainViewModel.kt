@@ -10,7 +10,6 @@ import com.monkeydonkey.smashorpass.models.Pokemon
 import com.monkeydonkey.smashorpass.network.PokeApi
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -42,6 +41,7 @@ class MainViewModel: ViewModel() {
         }
     }
 
+    //TODO test memory efficiency in comparison with storing urls instead of bitmaps and using Glide to load the images
     //Chain each pokemon call with synchronized calls to get their bitmaps
     private suspend fun getPokemon(name: String): Pokemon {
         val pokemonResponse = PokeApi.retrofitService.getPokemon(name)
