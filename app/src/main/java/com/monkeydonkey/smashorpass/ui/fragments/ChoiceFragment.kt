@@ -1,7 +1,6 @@
 package com.monkeydonkey.smashorpass.ui.fragments
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -29,7 +28,7 @@ class ChoiceFragment: Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = ChoiceFragmentBinding.inflate(inflater, container, false)
         return binding.root
     }
