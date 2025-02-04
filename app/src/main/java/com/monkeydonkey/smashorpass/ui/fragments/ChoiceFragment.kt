@@ -10,6 +10,9 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.carousel.CarouselLayoutManager
+import com.google.android.material.carousel.CarouselSnapHelper
+import com.google.android.material.carousel.FullScreenCarouselStrategy
 import com.monkeydonkey.smashorpass.databinding.ChoiceFragmentBinding
 import com.monkeydonkey.smashorpass.ui.MainViewModel
 import com.monkeydonkey.smashorpass.ui.adapters.ChoiceAdapter
@@ -34,10 +37,12 @@ class ChoiceFragment: Fragment() {
     ): View {
         _binding = ChoiceFragmentBinding.inflate(inflater, container, false)
 
-
-        binding.pokemonProfileRecyclerView.layoutManager =
-            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        binding.pokemonProfileRecyclerView.layoutManager = CarouselLayoutManager(
+            FullScreenCarouselStrategy()
+        )
         binding.pokemonProfileRecyclerView.adapter = choiceAdapter
+        val snapHelper = CarouselSnapHelper()
+        snapHelper.attachToRecyclerView(binding.pokemonProfileRecyclerView)
         return binding.root
     }
 
@@ -47,7 +52,7 @@ class ChoiceFragment: Fragment() {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.mainState.collect {
                     choiceAdapter.addToList(it.pokeList)
-                    choiceAdapter.notifyDataSetChanged()
+                    choiceAdapter.notifyItemRangeInserted(choiceAdapter.itemCount, it.pokeList.size)
                 }
             }
         }
