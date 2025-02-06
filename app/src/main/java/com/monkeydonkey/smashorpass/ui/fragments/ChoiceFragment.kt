@@ -1,7 +1,6 @@
 package com.monkeydonkey.smashorpass.ui.fragments
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,8 +9,10 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.viewpager2.widget.ViewPager2
 import com.monkeydonkey.smashorpass.databinding.ChoiceFragmentBinding
 import com.monkeydonkey.smashorpass.ui.MainViewModel
+import com.monkeydonkey.smashorpass.ui.adapters.PokemonCardsAdapter
 import kotlinx.coroutines.launch
 
 class ChoiceFragment : Fragment() {
@@ -24,6 +25,8 @@ class ChoiceFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val viewModel: MainViewModel by activityViewModels()
+    private lateinit var pokemonCardsAdapter: PokemonCardsAdapter
+    private lateinit var viewPager: ViewPager2
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -36,34 +39,22 @@ class ChoiceFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        pokemonCardsAdapter = PokemonCardsAdapter(this)
+        viewPager = binding.pokemonViewPager
+        viewPager.adapter = pokemonCardsAdapter
+
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.mainState.collect {
                     if (it.pokeList.isNotEmpty()) {
-                        childFragmentManager.beginTransaction().add(
-                            binding.fragmentContainerView.id, PokemonCardFragment
-                                .newInstance(it.pokeList[0])
-                        ).commit()
-                    } else {
-                        //TODO show loading fragment
+                        pokemonCardsAdapter.run {
+                            addToList(it.pokeList)
+                            notifyItemRangeInserted(itemCount, it.pokeList.size)
+                        }
                     }
                 }
             }
         }
-
-        binding.fragmentContainerView.apply {
-            setOnLongClickListener { pokemonCardFragment ->
-                val shadow = View.DragShadowBuilder(this)
-                pokemonCardFragment.startDragAndDrop(null, shadow, null, 0)
-            }
-
-            setOnDragListener { v, dragEvent ->
-                Log.d("@@@", dragEvent.action.toString())
-                true
-            }
-        }
-
-
     }
 
     override fun onDestroyView() {
