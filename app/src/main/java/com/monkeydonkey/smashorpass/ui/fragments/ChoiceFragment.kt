@@ -1,21 +1,20 @@
 package com.monkeydonkey.smashorpass.ui.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.commit
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.monkeydonkey.smashorpass.R
 import com.monkeydonkey.smashorpass.databinding.ChoiceFragmentBinding
 import com.monkeydonkey.smashorpass.ui.MainViewModel
 import kotlinx.coroutines.launch
 
-class ChoiceFragment: Fragment() {
+class ChoiceFragment : Fragment() {
 
     companion object {
         fun newInstance() = ChoiceFragment()
@@ -51,6 +50,20 @@ class ChoiceFragment: Fragment() {
                 }
             }
         }
+
+        binding.fragmentContainerView.apply {
+            setOnLongClickListener { pokemonCardFragment ->
+                val shadow = View.DragShadowBuilder(this)
+                pokemonCardFragment.startDragAndDrop(null, shadow, null, 0)
+            }
+
+            setOnDragListener { v, dragEvent ->
+                Log.d("@@@", dragEvent.action.toString())
+                true
+            }
+        }
+
+
     }
 
     override fun onDestroyView() {

@@ -37,6 +37,6 @@ class PokemonCardFragment: Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        binding.pokemonImage.setImageBitmap(this.pokemon.frontMain)
+        binding.pokemonImage.setImageBitmap(this.pokemon.frontSecondary)
     }
 }
